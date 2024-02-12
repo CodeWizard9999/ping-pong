@@ -1,0 +1,76 @@
+openapi: 3.0.0
+servers:
+  - description: Ping pong API server
+    url: 'http://localhost:8000/'
+info:
+  title: Ping pong game api
+  version: 1.0.0
+paths:
+  /game/add-game:
+    post:
+      tags:
+        - game
+      operationId: play
+      description: 'play game'
+      requestBody:
+        description: Request body for for playing game
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameRequest"
+      responses:
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        403:
+          description: Forbidden error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        200:
+          description: Played game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResponse'
+components:
+  schemas:
+    GameRequest:
+      type: object
+      required:
+        - firstPlayer
+        - secondPlayer
+      additionalProperties: false
+      properties:
+        firstPlayer:
+          minLength: 1
+          type: string
+          example: 'Bob'
+        secondPlayer:
+          minLength: 1
+          type: string
+          example: 'Sam'
+    GameResponse:
+      type: object
+      required:
+        - result
+      additionalProperties: false
+      properties:
+        result:
+          type: string
+          example: 'player1 won'
+    ErrorResponse:
+      description: Returns error response
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: SERVER_ERROR
+        message:
+          type: string
+          example: Something unexpected happened
